@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Auth End</title>
+    <script src="https://res.cdn.office.net/teams-js/2.0.0/js/MicrosoftTeams.min.js"></script>
+  </head>
+  <body>
+    <script>
+      microsoftTeams.app.initialize().then(() => {
+        microsoftTeams.authentication.notifySuccess("success");
+      }).catch((e) => {
+        microsoftTeams.authentication.notifyFailure(e?.message || "auth-end failed");
+      });
+    </script>
+  </body>
+</html>
