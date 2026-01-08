@@ -9,19 +9,16 @@ type Me = {
   preferred_username?: string;
   oid?: string;
   tid?: string;
+  scp?: string;
   error?: string;
 };
 
-export default function Home() {
-  const [inTeams, setInTeams] = useState(false);
-  const [status, setStatus] = useState("Not signed in");
+export default function Dashboard() {
   const [me, setMe] = useState<Me | null>(null);
+  const [status, setStatus] = useState("Not signed in");
 
   useEffect(() => {
-    microsoftTeams.app
-      .initialize()
-      .then(() => setInTeams(true))
-      .catch(() => setInTeams(false));
+    microsoftTeams.app.initialize().catch(() => {});
   }, []);
 
   const signIn = async () => {
@@ -51,35 +48,36 @@ export default function Home() {
   };
 
   return (
-    <main style={{ padding: 24, fontFamily: "system-ui, sans-serif" }}>
-      <h1 style={{ fontSize: 22, fontWeight: 700 }}>Apex Rota (Teams Tab)</h1>
-      <p style={{ opacity: 0.8, marginTop: 8 }}>
-        Running inside Teams: <b>{inTeams ? "Yes" : "No"}</b>
-      </p>
+    <div>
+      <h1 style={{ fontSize: 22, fontWeight: 800, marginBottom: 10 }}>Dashboard</h1>
 
-      <div style={{ marginTop: 16 }}>
-        <button
-          onClick={signIn}
-          style={{
-            padding: "10px 14px",
-            borderRadius: 10,
-            border: "1px solid #333",
-            cursor: "pointer",
-          }}
-        >
-          Sign in with Teams SSO
-        </button>
-        <p style={{ marginTop: 12 }}>{status}</p>
-      </div>
+      <button
+        onClick={signIn}
+        style={{
+          padding: "10px 14px",
+          borderRadius: 10,
+          border: "1px solid #334155",
+          background: "#0f172a",
+          color: "#e5e7eb",
+          cursor: "pointer",
+        }}
+      >
+        Sign in with Teams SSO
+      </button>
 
-      {me && (
-        <div style={{ marginTop: 20, padding: 16, borderRadius: 12, border: "1px solid #222" }}>
-          <h2 style={{ fontSize: 16, fontWeight: 700 }}>Token claims</h2>
-          <pre style={{ marginTop: 10, whiteSpace: "pre-wrap" }}>
-            {JSON.stringify(me, null, 2)}
-          </pre>
+      <p style={{ marginTop: 12, opacity: 0.9 }}>{status}</p>
+
+      {me?.ok && (
+        <div style={{ marginTop: 16, padding: 14, border: "1px solid #1f2937", borderRadius: 12, background: "#070d19" }}>
+          <div><b>User:</b> {me.name}</div>
+          <div><b>Email:</b> {me.preferred_username}</div>
+          <div><b>Scope:</b> {me.scp}</div>
         </div>
       )}
-    </main>
+
+      <div style={{ marginTop: 18, opacity: 0.9 }}>
+        Next: add staff list + rota builder.
+      </div>
+    </div>
   );
 }
